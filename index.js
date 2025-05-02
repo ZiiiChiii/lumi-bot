@@ -104,5 +104,5 @@ async function replyToUser(replyToken, replyMessage) {
 // 啟動伺服器
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🌸 Lumi server is running on port
-
+  console.log(`🌸 Lumi server is running on port ${PORT}`);
+});

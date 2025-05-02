@@ -54,25 +54,8 @@ app.get('/webhook', (req, res) => {
 // 丟給 OpenRouter
 async function talkToOpenRouter(userMessage) {
   const payload = {
-    model: "qwen/qwen-2.5-7b-instruct:free", // 這個是你指定的免費模型
-    messages: [{ role: 'user', content: userMessage }],
-  };
-
-  const headers = {
-    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-    'Content-Type': 'application/json',
-  };
-
-  const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', payload, { headers });
-
-  return response.data.choices?.[0]?.message?.content || '';
-}
-
-// 回覆到 LINE
-async function replyToUser(replyToken, replyMessage) {
-  const payload = {
-    replyToken: replyToken,
-      messages: [
+    model: "qwen/qwen-2.5-7b-instruct:free",
+    messages: [
       {
         role: 'system',
         content: `
@@ -87,14 +70,33 @@ async function replyToUser(replyToken, replyMessage) {
         content: userMessage
       }
     ]
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  }
-);
+  };
+
+  const headers = {
+    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+    'Content-Type': 'application/json',
+  };
+
+  const response = await axios.post('https://openrouter.ai/api/v1/chat/completions', payload, { headers });
+  return response.data.choices?.[0]?.message?.content || '';
+}
+
+// 回覆到 LINE
+async function replyToUser(replyToken, replyMessage) {
+  const headers = {
+    'Authorization': `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
+    'Content-Type': 'application/json',
+  };
+
+  const payload = {
+    replyToken,
+    messages: [
+      {
+        type: 'text',
+        text: replyMessage
+      }
+    ]
+  };
 
   await axios.post('https://api.line.me/v2/bot/message/reply', payload, { headers });
 }
@@ -102,5 +104,5 @@ async function replyToUser(replyToken, replyMessage) {
 // 啟動伺服器
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🌸 Lumi server is running on port ${PORT}`);
-});
+  console.log(`🌸 Lumi server is running on port
+

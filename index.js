@@ -54,7 +54,7 @@ app.get('/webhook', (req, res) => {
 // 丟給 OpenRouter
 async function talkToOpenRouter(userMessage) {
   const payload = {
-    model: "openai/gpt-3.5-turbo", // 這個是你指定的免費模型
+    model: "qwen/qwen-2.5-7b-instruct:free", // 這個是你指定的免費模型
     messages: [{ role: 'user', content: userMessage }],
   };
 

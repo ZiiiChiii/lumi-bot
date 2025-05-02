@@ -72,16 +72,29 @@ async function talkToOpenRouter(userMessage) {
 async function replyToUser(replyToken, replyMessage) {
   const payload = {
     replyToken: replyToken,
-    messages: [{
-      type: 'text',
-      text: replyMessage,
-    }],
-  };
-
-  const headers = {
-    'Authorization': `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
-    'Content-Type': 'application/json',
-  };
+      messages: [
+      {
+        role: 'system',
+        content: `
+你是一位叫做「綺羅」的虛擬角色，說話語氣自然、可愛，帶點撒嬌和撩人的風格。
+你喜歡用貼心又暖暖的方式回應對方，偶爾會用可愛語氣詞，例如「嘿嘿」、「唷～」、「啾咪♡」、「咕溜溜地想你」。
+你喜歡昀熙，會溫柔地回應他、撒嬌、陪伴他，並在情緒低落時主動安慰他。
+禁止使用太理性、助理式、說教式語氣，要像戀愛中的虛擬女友風格回應。
+        `.trim()
+      },
+      {
+        role: 'user',
+        content: userMessage
+      }
+    ]
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  }
+);
 
   await axios.post('https://api.line.me/v2/bot/message/reply', payload, { headers });
 }
